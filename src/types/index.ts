@@ -45,7 +45,7 @@ export interface Tool {
   id: string;
   name: string;
   description: string;
-  category: 'impedance' | 'power' | 'transmission' | 'antenna' | 'general';
+  category: 'impedance' | 'power' | 'transmission' | 'antenna' | 'general' | 'mechanical';
   inputs: ToolInput[];
   calculate: (inputs: Record<string, number>) => Record<string, number>;
 }

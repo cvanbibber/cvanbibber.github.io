@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calculator, Settings, Zap, Radio, Cpu } from 'lucide-react';
+import { Calculator, Settings, Zap, Radio, Cpu, Wrench } from 'lucide-react';
 import { engineeringTools } from '../data/tools';
 import { Tool } from '../types';
 
@@ -13,7 +13,8 @@ const Tools: React.FC = () => {
     impedance: { name: 'Impedance', icon: Zap, color: 'green' },
     power: { name: 'Power', icon: Cpu, color: 'red' },
     antenna: { name: 'Antenna', icon: Radio, color: 'purple' },
-    transmission: { name: 'Transmission', icon: Calculator, color: 'orange' },
+  transmission: { name: 'Transmission', icon: Calculator, color: 'orange' },
+  mechanical: { name: 'Mechanical', icon: Wrench, color: 'amber' },
   };
 
   const handleToolSelect = (tool: Tool) => {
@@ -273,6 +274,14 @@ const getResultUnit = (key: string): string => {
   phaseLength: ' mm',
   newLength: ' mm',
   deltaLength: ' mm',
+  thetaSA: ' °C/W',
+  estArea: ' cm²',
+  torqueNm: ' N·m',
+  deflection: ' mm',
+  delayNs: ' ns',
+  delayPs: ' ps',
+  psPerInch: ' ps/in',
+  lengthForDelay: ' mm',
   };
   return units[key as keyof typeof units] || '';
 };
@@ -283,7 +292,7 @@ const getCalculatorInfo = (toolId: string): string => {
     'trace-width-calculator': 'Based on IPC-2221 standards for PCB trace current capacity. Calculations assume external traces in still air at room temperature.',
     'impedance-calculator': 'Uses microstrip transmission line equations for characteristic impedance calculation. Results are approximate and should be verified with field solvers.',
     'via-calculator': 'Estimates via impedance and current capacity. Actual performance may vary based on PCB stackup and manufacturing tolerances.',
-    'antenna-calculator': 'Provides basic dimensions for half-wave dipole antennas in free space. Real-world performance will be affected by ground planes and nearby objects.',
+  // 'antenna-calculator' removed in refinement to focus on practical tools
   'lc-calculator': 'Calculates resonant frequency and component values for LC circuits. Assumes ideal components without parasitic effects.',
   'diff-impedance-calculator': 'Differential pair approximation for coupled microstrip; useful for quick spacing iterations. Verify with field solvers for final design.',
   'via-current-thermal': 'Thin-wall model for via copper ring; results are conservative estimates and ignore spreading/adjacent copper effects.',
@@ -296,6 +305,10 @@ const getCalculatorInfo = (toolId: string): string => {
   'rc-filter': 'RC low-pass helper for embedded ADC front-ends; considers convenient R value and computes required C.',
   'rf-length': 'Quarter/half-wave and custom phase lengths given effective dielectric constant.',
   'antenna-tuning': 'Length scales approximately inversely with frequency; calculator estimates how much to trim/extend.',
+  'heatsink-size': 'Uses a simple thermal resistance budget to estimate required heatsink θSA and rough surface area for natural convection.',
+  'bolt-preload': 'Torque ≈ K·F·d with K-factor capturing friction. Always verify with manufacturer guidance for critical joints.',
+  'beam-deflection': 'Classic cantilever deflection formula δ = F L³ / (3 E I) for small deflections and linear elastic behavior.',
+  'trace-delay': 'Uses vp = c/√εr to compute propagation delay and derive length for a target delay/skew; handy for length matching on buses.',
   };
   return info[toolId as keyof typeof info] || 'Professional engineering calculator with industry-standard formulas.';
 };

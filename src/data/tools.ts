@@ -287,7 +287,7 @@ export const engineeringTools: Tool[] = [
     }
   },
   {
-    id: "rc-filter",
+  id: "rc-filter",
     name: "RC Low-Pass Filter Helper",
     description: "Compute R/C for a desired cutoff and sampling rate",
     category: "transmission",
@@ -310,44 +310,28 @@ export const engineeringTools: Tool[] = [
     }
   },
   {
-    id: "rf-length",
-    name: "RF Line Length Matcher",
-    description: "Quarter/half-wave and phase length for given εr",
+    id: "trace-delay",
+    name: "PCB Trace Delay / Length",
+    description: "Compute delay from length and εr; and length for a target delay",
     category: "transmission",
     inputs: [
-      { id: "freq", label: "Frequency", unit: "MHz", type: "number", min: 1, max: 100000, default: 2400 },
-      { id: "erEff", label: "Effective εr", unit: "", type: "number", min: 1, max: 10, default: 2.9 },
-      { id: "phase", label: "Phase Shift", unit: "°", type: "number", min: 0, max: 360, default: 90 }
+      { id: "erEff", label: "Effective εr", unit: "", type: "number", min: 1, max: 10, default: 3.2 },
+      { id: "length", label: "Length", unit: "mm", type: "number", min: 1, max: 2000, default: 25 },
+      { id: "delay", label: "Target Delay", unit: "ps", type: "number", min: 1, max: 5000, default: 150 }
     ],
     calculate: (inputs) => {
-      const c = 299792458;
-      const f = inputs.freq * 1e6;
+      const c = 299792458; // m/s
       const vp = c / Math.sqrt(inputs.erEff);
-      const lambda = vp / f; // m
+      const length_m = inputs.length / 1000;
+      const delay_s = length_m / vp;
+      const delay_ps = delay_s * 1e12;
+      const ps_per_in = (0.0254 / vp) * 1e12; // ps/in
+      const length_for_delay_m = (inputs.delay * 1e-12) * vp;
       return {
-        quarterWave: Number((lambda * 1000 / 4).toFixed(2)),
-        halfWave: Number((lambda * 1000 / 2).toFixed(2)),
-        phaseLength: Number(((lambda * 1000) * (inputs.phase / 360)).toFixed(2))
-      };
-    }
-  },
-  {
-    id: "antenna-tuning",
-    name: "Antenna Tuning Aid",
-    description: "Estimate length trim to shift resonance",
-    category: "antenna",
-    inputs: [
-      { id: "fMeas", label: "Measured Resonance", unit: "MHz", type: "number", min: 100, max: 6000, default: 2450 },
-      { id: "fTarget", label: "Target Resonance", unit: "MHz", type: "number", min: 100, max: 6000, default: 2400 },
-      { id: "length", label: "Current Length", unit: "mm", type: "number", min: 1, max: 1000, default: 31 }
-    ],
-    calculate: (inputs) => {
-      // Length ∝ 1/f approx.
-      const newLen = inputs.length * (inputs.fMeas / inputs.fTarget);
-      const delta = newLen - inputs.length;
-      return {
-        newLength: Number(newLen.toFixed(2)),
-        deltaLength: Number(delta.toFixed(2))
+        delayNs: Number((delay_ps / 1000).toFixed(3)),
+        delayPs: Number(delay_ps.toFixed(1)),
+        psPerInch: Number(ps_per_in.toFixed(1)),
+        lengthForDelay: Number((length_for_delay_m * 1000).toFixed(2))
       };
     }
   },
@@ -440,47 +424,7 @@ export const engineeringTools: Tool[] = [
       };
     }
   },
-  {
-    id: "antenna-calculator",
-    name: "Dipole Antenna Calculator",
-    description: "Calculate dimensions for half-wave dipole antennas",
-    category: "antenna",
-    inputs: [
-      { id: "frequency", label: "Frequency", unit: "MHz", type: "number", min: 1, max: 10000, default: 2400 },
-      { id: "wireRadius", label: "Wire Radius", unit: "mm", type: "number", min: 0.1, max: 10, default: 1 },
-      { id: "velocityFactor", label: "Velocity Factor", unit: "", type: "number", min: 0.6, max: 1, default: 0.95 }
-    ],
-    calculate: (inputs) => {
-      const { frequency, wireRadius, velocityFactor } = inputs;
-      
-      const c = 299792458; // m/s
-      const f = frequency * 1e6; // Hz
-      const lambda = (c / f) * velocityFactor; // m
-      
-      // Half-wave dipole length
-      const totalLength = lambda / 2; // m
-      const armLength = totalLength / 2; // m
-      
-      // Quarter-wave monopole (for comparison)
-      const monopoleLength = lambda / 4; // m
-      
-      // Radiation resistance (approximate)
-      const radiationResistance = 73; // ohms for half-wave dipole
-      
-      // Bandwidth (approximate, depends on wire thickness)
-      const lengthToDiameter = (totalLength * 1000) / (2 * wireRadius);
-      const bandwidth = frequency * 0.05 / Math.log(lengthToDiameter); // MHz, rough approximation
-      
-      return {
-        totalLength: Number((totalLength * 1000).toFixed(1)), // mm
-        armLength: Number((armLength * 1000).toFixed(1)), // mm
-        monopoleLength: Number((monopoleLength * 1000).toFixed(1)), // mm
-        wavelength: Number((lambda * 1000).toFixed(1)), // mm
-        radiationResistance: radiationResistance,
-        bandwidth: Number(bandwidth.toFixed(1)) // MHz
-      };
-    }
-  },
+  // Removed niche antenna dipole calculator to focus on PCB/mechanical value
   {
     id: "lc-calculator",
     name: "LC Resonant Circuit Calculator",
@@ -526,6 +470,76 @@ export const engineeringTools: Tool[] = [
         requiredL: Number((LForTarget * 1e6).toFixed(3)), // μH
         requiredC: Number((CForTarget * 1e12).toFixed(1)), // pF
         impedance: Number(Z0.toFixed(1)) // Ω
+      };
+    }
+  }
+  ,
+  {
+    id: "heatsink-size",
+    name: "Heatsink Size Estimator",
+    description: "Estimate required thermal resistance (°C/W) and fin area",
+    category: "mechanical",
+    inputs: [
+      { id: "power", label: "Power Dissipation", unit: "W", type: "number", min: 0.1, max: 500, default: 10 },
+      { id: "tAmbient", label: "Ambient Temp", unit: "°C", type: "number", min: -20, max: 60, default: 25 },
+      { id: "tJunction", label: "Max Junction Temp", unit: "°C", type: "number", min: 40, max: 150, default: 100 },
+      { id: "thetaJC", label: "θJC", unit: "°C/W", type: "number", min: 0.1, max: 10, default: 1.5 },
+      { id: "thetaCS", label: "θCS", unit: "°C/W", type: "number", min: 0.05, max: 2, default: 0.2 }
+    ],
+    calculate: (inputs) => {
+      const ΔT = inputs.tJunction - inputs.tAmbient;
+      const θ_total = ΔT / inputs.power;
+      const θSA = Math.max(0.1, θ_total - (inputs.thetaJC + inputs.thetaCS));
+      // Rough natural convection surface area estimate: θSA ≈ 50/A_dm2 (°C/W)
+      const A_dm2 = 50 / θSA; // dm^2
+      const A_cm2 = A_dm2 * 100; // cm^2
+      return {
+        thetaSA: Number(θSA.toFixed(2)),
+        estArea: Number(A_cm2.toFixed(0)),
+      };
+    }
+  },
+  {
+    id: "bolt-preload",
+    name: "Bolt Preload & Torque",
+    description: "Estimate torque for target preload using K-factor",
+    category: "mechanical",
+    inputs: [
+      { id: "preload", label: "Target Preload", unit: "kN", type: "number", min: 0.1, max: 200, default: 10 },
+      { id: "diameter", label: "Bolt Diameter", unit: "mm", type: "number", min: 2, max: 36, default: 8 },
+      { id: "kFactor", label: "K-Factor", unit: "", type: "number", min: 0.1, max: 0.4, default: 0.2 }
+    ],
+    calculate: (inputs) => {
+      const F = inputs.preload * 1000; // N
+      const d_m = inputs.diameter / 1000; // m
+      const T = inputs.kFactor * F * d_m; // N·m
+      return {
+        torqueNm: Number(T.toFixed(2)),
+      };
+    }
+  },
+  {
+    id: "beam-deflection",
+    name: "Cantilever Beam Deflection",
+    description: "Tip deflection under end load",
+    category: "mechanical",
+    inputs: [
+      { id: "load", label: "End Load", unit: "N", type: "number", min: 1, max: 50000, default: 100 },
+      { id: "length", label: "Length", unit: "mm", type: "number", min: 10, max: 2000, default: 200 },
+      { id: "width", label: "Width", unit: "mm", type: "number", min: 1, max: 200, default: 20 },
+      { id: "thickness", label: "Thickness", unit: "mm", type: "number", min: 1, max: 200, default: 5 },
+      { id: "E", label: "Young's Modulus", unit: "GPa", type: "number", min: 1, max: 300, default: 200 }
+    ],
+    calculate: (inputs) => {
+      const F = inputs.load; // N
+      const L = inputs.length / 1000; // m
+      const b = inputs.width / 1000; // m
+      const h = inputs.thickness / 1000; // m
+      const E = inputs.E * 1e9; // Pa
+      const I = (b * Math.pow(h, 3)) / 12; // m^4
+      const delta = (F * Math.pow(L, 3)) / (3 * E * I); // m
+      return {
+        deflection: Number((delta * 1000).toFixed(3)) // mm
       };
     }
   }
