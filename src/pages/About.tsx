@@ -24,12 +24,10 @@ const About: React.FC = () => {
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Engineering Philosophy</h2>
               <p className="text-lg text-gray-700 mb-6">
                 As a Mechatronics engineering student at UC Berkeley, I specialize in the integration of mechanical, 
-                electrical, and computational systems. My approach centers on simulation-based design and generative 
-                design methodologies to create innovative solutions for complex engineering challenges.
-              </p>
+                electrical, and computational systems. I think this brings a unique view to my work, allowing me to approach multidisciplinary problems from multiple angles.
+                </p>
               <p className="text-lg text-gray-700">
-                I believe in leveraging cutting-edge technologies like AI-powered generative design, electromagnetic 
-                simulation, and algorithmic engineering to push the boundaries of what's possible in modern engineering.
+                I believe in combining mechanical, electronics, and software engineering principles, leveraging simulation to optimize designs, and algorithmic engineering to push the boundaries of what's possible in modern engineering.
               </p>
             </div>
 
@@ -98,8 +96,7 @@ const About: React.FC = () => {
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Simulation-Based Design Approach</h2>
               <div className="bg-gray-50 p-6 rounded-lg">
                 <p className="text-gray-700 mb-4">
-                  My design philosophy centers on leveraging advanced simulation tools to validate and optimize designs 
-                  before physical prototyping. This approach includes:
+                  By leveraging advanced simulation tools to validate and optimize designs, I can identify potential issues and make informed decisions before physical prototyping. This approach includes:
                 </p>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start">
@@ -179,8 +176,7 @@ const About: React.FC = () => {
             <div className="text-center bg-gradient-to-r from-primary-50 to-accent-50 p-8 rounded-lg">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Contact Me</h3>
               <p className="text-gray-700 mb-6">
-                Interested in working together on innovative engineering projects? 
-                I'm always excited to tackle new challenges in mechatronics and simulation-based design.
+                I'm always excited to tackle new challenges in electronics, mechatronics, or simulation-based design.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/contact" className="btn-primary">

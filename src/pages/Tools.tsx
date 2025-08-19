@@ -58,7 +58,7 @@ const Tools: React.FC = () => {
               Engineering Tools & Calculators
             </h1>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Professional electrical engineering calculators and tools for RF design, 
+              Some simple engineering calculators and tools for RF design, 
               PCB layout, antenna analysis, and more. All calculations are performed 
               client-side for privacy and speed.
             </p>

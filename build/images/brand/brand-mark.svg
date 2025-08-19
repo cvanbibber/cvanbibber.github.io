@@ -1,0 +1,22 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'>
+  <defs>
+    <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0%' stop-color='#2563eb'/>
+      <stop offset='100%' stop-color='#16a34a'/>
+    </linearGradient>
+  </defs>
+  <rect width='128' height='128' rx='24' fill='url(#g)'/>
+  <g fill='none' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'>
+    <!-- gear -->
+    <path d='M64 26 l6 4 8-2 4 6 8 2 0 8 6 6 -4 6 2 8 -6 4 -2 8 -8 0 -6 6 -6-4 -8 2 -4-6 -8-2 0-8 -6-6 4-6 -2-8 6-4 2-8 8 0 6-6z' opacity='0.35'/>
+    <!-- chip outline -->
+    <rect x='42' y='42' width='44' height='44' rx='8' />
+    <!-- chip pins -->
+    <path d='M54 38 v8M64 38 v8M74 38 v8M84 38 v8' />
+    <path d='M54 82 v8M64 82 v8M74 82 v8M84 82 v8' />
+    <path d='M38 54 h8M38 64 h8M38 74 h8' />
+    <path d='M82 54 h8M82 64 h8M82 74 h8' />
+    <!-- center trace -->
+    <circle cx='64' cy='64' r='10' />
+  </g>
+</svg>
