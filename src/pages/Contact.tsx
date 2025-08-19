@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, MapPin, Linkedin, Github, Send, Download, Zap, Cpu, Cog } from 'lucide-react';
+import { Mail, MapPin, Linkedin, Github, Send, Download } from 'lucide-react';
 import { personalInfo } from '../data/portfolio';
 
 const Contact: React.FC = () => {
