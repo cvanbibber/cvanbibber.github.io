@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { Calculator, Settings, Zap, Radio, Cpu, Wrench } from 'lucide-react';
 import { engineeringTools } from '../data/tools';
 import { Tool } from '../types';
@@ -55,14 +56,16 @@ const Tools: React.FC = () => {
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <motion.h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               Engineering Tools & Calculators
-            </h1>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            </motion.h1>
+            <motion.p className="text-lg text-gray-600 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }}>
               Some simple engineering calculators and tools for RF design, 
               PCB layout, antenna analysis, and more. All calculations are performed 
               client-side for privacy and speed.
-            </p>
+            </motion.p>
           </div>
         </div>
       </div>
@@ -71,7 +74,8 @@ const Tools: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Tool Selection */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-24">
+            <motion.div className="bg-white rounded-lg shadow-lg p-6 sticky top-24"
+              initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 Select a Tool
               </h2>
@@ -109,13 +113,14 @@ const Tools: React.FC = () => {
                   </div>
                 );
               })}
-            </div>
+            </motion.div>
           </div>
 
           {/* Calculator Interface */}
           <div className="lg:col-span-2">
             {selectedTool ? (
-              <div className="bg-white rounded-lg shadow-lg p-6">
+              <motion.div className="bg-white rounded-lg shadow-lg p-6"
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                 <div className="mb-6">
                   <h2 className="text-2xl font-semibold text-gray-900 mb-2">
                     {selectedTool.name}
@@ -195,9 +200,10 @@ const Tools: React.FC = () => {
                     {getCalculatorInfo(selectedTool.id)}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ) : (
-              <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+              <motion.div className="bg-white rounded-lg shadow-lg p-8 text-center"
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                 <Calculator className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">
                   Select a Tool to Get Started
@@ -206,7 +212,7 @@ const Tools: React.FC = () => {
                   Choose from our collection of professional engineering calculators 
                   to solve complex design problems quickly and accurately.
                 </p>
-              </div>
+              </motion.div>
             )}
           </div>
         </div>

@@ -1,49 +1,53 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Download, ExternalLink, Github, Briefcase } from 'lucide-react';
 import ProgressiveImage from '../components/ProgressiveImage';
 import { personalInfo, featuredProjects, skills } from '../data/portfolio';
+import Reveal from '../components/Reveal';
+import HeroBackground from '../components/HeroBackground';
 
 const Home: React.FC = () => {
   return (
     <div className="pt-16">
       {/* Hero Section */}
   <section className="section-padding relative overflow-hidden">
-        {/* Background image with a soft gradient overlay */}
-        <div className="absolute inset-0">
-          <img
-            src="/images/brand/hero-bg.svg"
-            alt=""
-            className="w-full h-full object-cover opacity-20 pointer-events-none select-none"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-50/80 to-accent-50/80" />
-        </div>
+  {/* Animated background */}
+  <HeroBackground />
         <div className="relative max-w-7xl mx-auto">
           <div className="text-center">
-    <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-              <span className="gradient-text">{personalInfo.name}</span>
-            </h1>
-    <h2 className="text-xl md:text-2xl text-gray-700 mb-6">
-              {personalInfo.subtitle}
-            </h2>
-    <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-10">
-              {personalInfo.bio}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/projects" className="btn-primary inline-flex items-center justify-center gap-2">
-                <Briefcase className="h-5 w-5" />
-                <span>View My Work</span>
-              </Link>
-              <a
-                href="/resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary inline-flex items-center justify-center gap-2"
-              >
-                <Download className="h-5 w-5" />
-                <span>Download Resume</span>
-              </a>
-            </div>
+            <Reveal>
+              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
+                <span className="gradient-text">{personalInfo.name}</span>
+              </h1>
+            </Reveal>
+            <Reveal delay={0.05}>
+              <h2 className="text-xl md:text-2xl text-gray-700 mb-6">
+                {personalInfo.subtitle}
+              </h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-10">
+                {personalInfo.bio}
+              </p>
+            </Reveal>
+            <Reveal delay={0.15}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/projects" className="btn-primary inline-flex items-center justify-center gap-2">
+                  <Briefcase className="h-5 w-5" />
+                  <span>View My Work</span>
+                </Link>
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary inline-flex items-center justify-center gap-2"
+                >
+                  <Download className="h-5 w-5" />
+                  <span>Download Resume</span>
+                </a>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -61,8 +65,15 @@ const Home: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProjects.map((project) => (
-              <Link key={project.id} to={`/projects/${project.id}`} className="card group cursor-pointer block overflow-hidden">
+            {featuredProjects.map((project, i) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-10% 0px' }}
+                transition={{ duration: 0.5, delay: i * 0.05 }}
+              >
+              <Link to={`/projects/${project.id}`} className="card group cursor-pointer block overflow-hidden">
                 <div className="aspect-video bg-gradient-to-br from-primary-100 to-accent-100 relative">
                   {project.images[0] && (
                     <ProgressiveImage
@@ -115,6 +126,7 @@ const Home: React.FC = () => {
                   </div>
                 </div>
               </Link>
+              </motion.div>
             ))}
           </div>
 
@@ -138,12 +150,11 @@ const Home: React.FC = () => {
             </p>
           </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-            {skills.map((skill) => (
-              <div
-                key={skill.name}
-        className="bg-white rounded-lg p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
-              >
+  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+    {skills.map((skill, i) => (
+      <Reveal key={skill.name} delay={i * 0.03}
+    className="bg-white rounded-lg p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
+      >
         <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary-50 to-accent-50 rounded-lg flex items-center justify-center overflow-hidden">
                   <img
                     src={skill.icon}
@@ -153,7 +164,7 @@ const Home: React.FC = () => {
                   />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">{skill.name}</h3>
-              </div>
+      </Reveal>
             ))}
           </div>
         </div>

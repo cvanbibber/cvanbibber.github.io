@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Tag, ExternalLink, Github, ArrowLeft } from 'lucide-react';
 import { projects } from '../data/portfolio';
@@ -72,7 +73,8 @@ const ProjectDetail: React.FC = () => {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+        <motion.div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8"
+          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <div className="p-8">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
               <div className="mb-4 lg:mb-0">
@@ -130,24 +132,27 @@ const ProjectDetail: React.FC = () => {
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Project Images - ensure placeholders exist */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <motion.div className="bg-white rounded-xl shadow-lg p-6"
+              initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Project Gallery</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(project.images && project.images.length ? project.images : [
                   categoryPlaceholders[project.category].primary,
                   categoryPlaceholders[project.category].secondary,
                 ]).slice(0, 4).map((image, index) => (
-                  <div key={index} className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                    <img
+                  <motion.div key={index} className="aspect-video bg-gray-100 rounded-lg overflow-hidden"
+                    initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: index * 0.05 }}>
+                    <motion.img
                       src={image}
                       alt={`${project.title} - ${index + 1}`}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover"
+                      whileHover={{ scale: 1.04 }}
                       onError={(e) => {
                         const fallback = index % 2 === 0
                           ? categoryPlaceholders[project.category].primary
@@ -155,13 +160,14 @@ const ProjectDetail: React.FC = () => {
                         e.currentTarget.src = fallback;
                       }}
                     />
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Project Description */}
-            <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+            <motion.div className="bg-white rounded-xl shadow-lg p-6 space-y-6"
+              initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: 0.05 }}>
               <h2 className="text-2xl font-semibold text-gray-900">Project Overview</h2>
               <div className="prose prose-gray max-w-none">
                 <p className="text-gray-700 leading-relaxed text-lg">
@@ -196,7 +202,7 @@ const ProjectDetail: React.FC = () => {
                   </ul>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Media & Documentation section removed per request */}
           </div>
@@ -204,7 +210,8 @@ const ProjectDetail: React.FC = () => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Technologies */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <motion.div className="bg-white rounded-xl shadow-lg p-6"
+              initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: 0.1 }}>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <Tag className="mr-2 h-5 w-5" />
                 Technologies Used
@@ -219,10 +226,11 @@ const ProjectDetail: React.FC = () => {
                   </span>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Project Stats */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <motion.div className="bg-white rounded-xl shadow-lg p-6"
+              initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: 0.15 }}>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Details</h3>
               <div className="space-y-4">
                 <div>
@@ -253,10 +261,11 @@ const ProjectDetail: React.FC = () => {
                   <dd className="mt-1 text-sm text-gray-900">{project.technologies.length} tools used</dd>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Related Projects */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <motion.div className="bg-white rounded-xl shadow-lg p-6"
+              initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: 0.2 }}>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Related Projects</h3>
               <div className="space-y-3">
                 {projects
@@ -277,7 +286,7 @@ const ProjectDetail: React.FC = () => {
                     </Link>
                   ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

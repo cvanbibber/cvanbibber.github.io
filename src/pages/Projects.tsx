@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Filter, Calendar, Tag, ExternalLink, Github, Cpu, Zap, Cog, Settings } from 'lucide-react';
 import ProgressiveImage from '../components/ProgressiveImage';
@@ -132,13 +133,23 @@ const Projects: React.FC = () => {
       <div className="bg-white/90 backdrop-blur-sm shadow-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <motion.h1
+              className="text-4xl font-bold text-gray-900 mb-4"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
               Engineering Projects
-            </h1>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            </motion.h1>
+            <motion.p
+              className="text-lg text-gray-600 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.05 }}
+            >
               Projects spanning FPGA design, RF/microwave engineering, 
               electronics, PCB design, mechanical CAD, and mechatronics integration through simulation-based design.
-            </p>
+            </motion.p>
           </div>
         </div>
       </div>
@@ -146,7 +157,8 @@ const Projects: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
   {/* Filters and Search */}
-  <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
+  <motion.div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100"
+    initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }}>
           <div className="flex flex-col lg:flex-row gap-6">
             
             {/* Search Bar */}
@@ -217,7 +229,7 @@ const Projects: React.FC = () => {
               </div>
             </div>
           )}
-        </div>
+        </motion.div>
 
         {/* Results Summary */}
         <div className="mb-6">
@@ -229,10 +241,11 @@ const Projects: React.FC = () => {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredAndSortedProjects.map((project) => (
-            <div key={project.id} className="group">
+          {filteredAndSortedProjects.map((project, i) => (
+            <motion.div key={project.id} className="group" initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-10% 0px' }} transition={{ duration: 0.45, delay: i * 0.04 }}>
               <Link to={`/projects/${project.id}`} className="block">
-                <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-2">
+                <motion.div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
+                  whileHover={{ y: -6 }}>
                   
                   {/* Project Image with optional hover swap */}
                   <div className="aspect-video bg-gradient-to-br from-primary-100 to-accent-100 relative overflow-hidden">
@@ -351,9 +364,9 @@ const Projects: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+        </motion.div>
               </Link>
-            </div>
+      </motion.div>
           ))}
         </div>
 
