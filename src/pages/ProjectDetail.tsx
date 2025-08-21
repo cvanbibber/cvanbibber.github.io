@@ -1,11 +1,13 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import Lightbox from '../components/Lightbox';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Tag, ExternalLink, Github, ArrowLeft } from 'lucide-react';
 import { projects } from '../data/portfolio';
 
 const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [lightboxIndex, setLightboxIndex] = React.useState<number | null>(null);
   const project = projects.find(p => p.id === id);
 
   if (!project) {
@@ -56,6 +58,11 @@ const ProjectDetail: React.FC = () => {
     }
   };
 
+  const galleryImages = (project.images && project.images.length ? project.images : [
+    categoryPlaceholders[project.category].primary,
+    categoryPlaceholders[project.category].secondary,
+  ]).slice(0, 8);
+
   return (
     <div className="pt-16 min-h-screen bg-gray-50">
       {/* Navigation */}
@@ -71,7 +78,7 @@ const ProjectDetail: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8"
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
@@ -134,80 +141,74 @@ const ProjectDetail: React.FC = () => {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Project Images - ensure placeholders exist */}
-            <motion.div className="bg-white rounded-xl shadow-lg p-6"
-              initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Project Gallery</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {(project.images && project.images.length ? project.images : [
-                  categoryPlaceholders[project.category].primary,
-                  categoryPlaceholders[project.category].secondary,
-                ]).slice(0, 4).map((image, index) => (
-                  <motion.div key={index} className="aspect-video bg-gray-100 rounded-lg overflow-hidden"
-                    initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: index * 0.05 }}>
-                    <motion.img
-                      src={image}
-                      alt={`${project.title} - ${index + 1}`}
-                      className="w-full h-full object-cover"
-                      whileHover={{ scale: 1.04 }}
-                      onError={(e) => {
-                        const fallback = index % 2 === 0
-                          ? categoryPlaceholders[project.category].primary
-                          : categoryPlaceholders[project.category].secondary;
-                        e.currentTarget.src = fallback;
-                      }}
-                    />
-                  </motion.div>
-                ))}
+        {/* 3-column layout: left gallery, center overview, right sidebar */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr_1fr] gap-8">
+          {/* Left: Gallery */}
+          <motion.div className="bg-white rounded-xl shadow-lg p-6 h-max sticky top-24"
+            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Gallery</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {galleryImages.map((image, index) => (
+                <motion.button key={index} className="aspect-video bg-gray-100 rounded-lg overflow-hidden"
+                  initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: index * 0.05 }}
+                  onClick={() => setLightboxIndex(index)}>
+                  <motion.img
+                    src={image}
+                    alt={`${project.title} - ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    whileHover={{ scale: 1.04 }}
+                    onError={(e) => {
+                      const fallback = index % 2 === 0
+                        ? categoryPlaceholders[project.category].primary
+                        : categoryPlaceholders[project.category].secondary;
+                      (e.currentTarget as HTMLImageElement).src = fallback;
+                    }}
+                  />
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Center: Overview */}
+          <motion.div className="bg-white rounded-xl shadow-lg p-6 space-y-6"
+            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: 0.05 }}>
+            <h2 className="text-2xl font-semibold text-gray-900">Project Overview</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 leading-relaxed text-lg">
+                {project.longDescription}
+              </p>
+            </div>
+
+            {/* Extrapolated helpful sections */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Objectives</h3>
+                <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                  <li>Deliver a reliable, testable prototype aligned with the project scope</li>
+                  <li>Validate core assumptions via simulation and bench testing</li>
+                  <li>Design for manufacturability and integration with adjacent systems</li>
+                </ul>
               </div>
-            </motion.div>
-
-            {/* Project Description */}
-            <motion.div className="bg-white rounded-xl shadow-lg p-6 space-y-6"
-              initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: 0.05 }}>
-              <h2 className="text-2xl font-semibold text-gray-900">Project Overview</h2>
-              <div className="prose prose-gray max-w-none">
-                <p className="text-gray-700 leading-relaxed text-lg">
-                  {project.longDescription}
-                </p>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">My Contributions</h3>
+                <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                  <li>Lead design and implementation of key subsystems</li>
+                  <li>Develop test plans and instrumentation for data collection</li>
+                  <li>Coordinate cross-discipline work across electrical, mechanical, and software</li>
+                </ul>
               </div>
-
-              {/* Extrapolated helpful sections */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Objectives</h3>
-                  <ul className="list-disc pl-5 text-gray-700 space-y-1">
-                    <li>Deliver a reliable, testable prototype aligned with the project scope</li>
-                    <li>Validate core assumptions via simulation and bench testing</li>
-                    <li>Design for manufacturability and integration with adjacent systems</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">My Contributions</h3>
-                  <ul className="list-disc pl-5 text-gray-700 space-y-1">
-                    <li>Lead design and implementation of key subsystems</li>
-                    <li>Develop test plans and instrumentation for data collection</li>
-                    <li>Coordinate cross-discipline work across electrical, mechanical, and software</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Outcomes</h3>
-                  <ul className="list-disc pl-5 text-gray-700 space-y-1">
-                    <li>Demonstrated core functionality and performance targets</li>
-                    <li>Documented learnings and next-iteration opportunities</li>
-                    <li>Delivered a maintainable, modular solution ready for extension</li>
-                  </ul>
-                </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Outcomes</h3>
+                <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                  <li>Demonstrated core functionality and performance targets</li>
+                  <li>Documented learnings and next-iteration opportunities</li>
+                  <li>Delivered a maintainable, modular solution ready for extension</li>
+                </ul>
               </div>
-            </motion.div>
+            </div>
+          </motion.div>
 
-            {/* Media & Documentation section removed per request */}
-          </div>
-
-          {/* Sidebar */}
+          {/* Right: Sidebar */}
           <div className="space-y-6">
             {/* Technologies */}
             <motion.div className="bg-white rounded-xl shadow-lg p-6"
@@ -289,6 +290,14 @@ const ProjectDetail: React.FC = () => {
             </motion.div>
           </div>
         </div>
+        {lightboxIndex !== null && (
+          <Lightbox
+            images={galleryImages}
+            index={lightboxIndex}
+            onClose={() => setLightboxIndex(null)}
+            onNavigate={(i) => setLightboxIndex(i)}
+          />
+        )}
       </div>
     </div>
   );

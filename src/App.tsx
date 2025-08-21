@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import EngineeringBackground from './components/EngineeringBackground';
 import IntroOverlay from './components/IntroOverlay';
 import PageTransition from './components/PageTransition';
+import ScrollProgress from './components/ScrollProgress';
 import Home from './pages/Home';
 import About from './pages/About';
 import Projects from './pages/Projects';
@@ -34,6 +35,7 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 relative">
+  <ScrollProgress />
         <EngineeringBackground />
         <IntroOverlay />
         <Navbar />

@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Filter, Calendar, Tag, ExternalLink, Github, Cpu, Zap, Cog, Settings } from 'lucide-react';
 import ProgressiveImage from '../components/ProgressiveImage';
 import { projects } from '../data/portfolio';
+import TiltCard from '../components/TiltCard';
 
 const Projects: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -244,45 +245,18 @@ const Projects: React.FC = () => {
           {filteredAndSortedProjects.map((project, i) => (
             <motion.div key={project.id} className="group" initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-10% 0px' }} transition={{ duration: 0.45, delay: i * 0.04 }}>
               <Link to={`/projects/${project.id}`} className="block">
-                <motion.div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
-                  whileHover={{ y: -6 }}>
-                  
-                  {/* Project Image with optional hover swap */}
+                <TiltCard className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-2xl">
+                  {/* Project Image with hover blur */}
                   <div className="aspect-video bg-gradient-to-br from-primary-100 to-accent-100 relative overflow-hidden">
-                    {project.images[0] && !project.images[1] && (
-                      <ProgressiveImage src={project.images[0]} alt={project.title} />
+                    {project.images[0] && (
+                      <ProgressiveImage src={project.images[0]} alt={project.title} hoverBlur />
                     )}
-                    {project.images[0] && project.images[1] && (
-                      <div className="absolute inset-0">
-                        <div className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-0">
-                          <ProgressiveImage src={project.images[0]} alt={project.title} />
-                        </div>
-                        <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                          <ProgressiveImage src={project.images[1]} alt={project.title + ' alt'} />
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Overlay with project info - appears on hover */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center p-6 backdrop-blur-[1px]">
-                      <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
-                        <p className="text-sm mb-2 line-clamp-3">
-                          {project.longDescription}
-                        </p>
-                        <div className="flex items-center justify-center text-xs">
-                          <ExternalLink className="h-4 w-4 mr-1" />
-                          View Details
-                        </div>
-                      </div>
-                    </div>
-
                     {/* Status Badge */}
                     <div className="absolute top-4 left-4">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getProjectStatusColor(project.status)}`}>
                         {project.status.replace('-', ' ')}
                       </span>
                     </div>
-
                     {/* Featured Badge */}
                     {project.featured && (
                       <div className="absolute top-4 right-4">
@@ -364,9 +338,9 @@ const Projects: React.FC = () => {
                       </div>
                     </div>
                   </div>
-        </motion.div>
+                </TiltCard>
               </Link>
-      </motion.div>
+            </motion.div>
           ))}
         </div>
 

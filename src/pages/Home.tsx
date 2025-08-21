@@ -1,20 +1,36 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Download, ExternalLink, Github, Briefcase } from 'lucide-react';
+import { ChevronRight, Download, Github, Briefcase } from 'lucide-react';
 import ProgressiveImage from '../components/ProgressiveImage';
 import { personalInfo, featuredProjects, skills } from '../data/portfolio';
 import Reveal from '../components/Reveal';
-import HeroBackground from '../components/HeroBackground';
+import CircuitField from '../components/CircuitField';
+import TiltCard from '../components/TiltCard';
+import MagneticButton from '../components/MagneticButton';
 
 const Home: React.FC = () => {
   return (
     <div className="pt-16">
       {/* Hero Section */}
   <section className="section-padding relative overflow-hidden">
-  {/* Animated background */}
-  <HeroBackground />
-        <div className="relative max-w-7xl mx-auto">
+  {/* Electronics-themed interactive background */}
+  <CircuitField />
+        {/* Focused soft overlay behind the hero text (centered, doesn't obscure edges) */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 flex justify-center z-15">
+          <div
+            className="w-full max-w-3xl mt-12 md:mt-20"
+            style={{
+              height: 'min(20rem, 38vh)',
+              pointerEvents: 'none',
+              borderRadius: '28px',
+              // Stronger center fade but quick falloff to avoid obscuring top/bottom/sides
+              background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.80) 60%, rgba(255,255,255,0.28) 75%, rgba(255,255,255,0) 100%)',
+              filter: 'blur(4px)'
+            }}
+          />
+        </div>
+  <div className="relative z-20 max-w-7xl mx-auto">
           <div className="text-center">
             <Reveal>
               <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
@@ -33,18 +49,22 @@ const Home: React.FC = () => {
             </Reveal>
             <Reveal delay={0.15}>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/projects" className="btn-primary inline-flex items-center justify-center gap-2">
+                <Link to="/projects" className="inline-flex">
+                  <MagneticButton className="btn-primary inline-flex items-center justify-center gap-2">
                   <Briefcase className="h-5 w-5" />
                   <span>View My Work</span>
+                  </MagneticButton>
                 </Link>
                 <a
                   href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-secondary inline-flex items-center justify-center gap-2"
+                  className="inline-flex"
                 >
-                  <Download className="h-5 w-5" />
-                  <span>Download Resume</span>
+                  <MagneticButton className="btn-secondary inline-flex items-center justify-center gap-2">
+                    <Download className="h-5 w-5" />
+                    <span>Download Resume</span>
+                  </MagneticButton>
                 </a>
               </div>
             </Reveal>
@@ -74,17 +94,15 @@ const Home: React.FC = () => {
                 transition={{ duration: 0.5, delay: i * 0.05 }}
               >
               <Link to={`/projects/${project.id}`} className="card group cursor-pointer block overflow-hidden">
-                <div className="aspect-video bg-gradient-to-br from-primary-100 to-accent-100 relative">
+                <TiltCard className="aspect-video bg-gradient-to-br from-primary-100 to-accent-100 relative">
                   {project.images[0] && (
                     <ProgressiveImage
                       src={project.images[0]}
                       alt={project.title}
+                      hoverBlur
                     />
                   )}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                    <ExternalLink className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-                </div>
+                </TiltCard>
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
                     {project.title}
